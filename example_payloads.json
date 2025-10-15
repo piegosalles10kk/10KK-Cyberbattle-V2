@@ -1,0 +1,219 @@
+{
+  "examples": [
+    {
+      "name": "Teste Básico - PowerShell Abuse",
+      "description": "Teste simples de execução PowerShell sem EDR",
+      "payload": {
+        "test_id": "T-001-BASIC-PS",
+        "test_name": "Teste Básico - PowerShell Abuse",
+        "cloud_provider": "hyperv",
+        "os_template": "windows-server-2022-base",
+        "vm_config": {
+          "vm_cpu": 2,
+          "vm_ram_mb": 4096,
+          "vm_switch_name": "Default Switch",
+          "base_vhdx_path": "C:\\HyperV-Disks\\VM-BASE.vhdx",
+          "admin_user": "adm",
+          "admin_password": "adm123"
+        },
+        "attack_config": {
+          "ttp_id": "T1059.001"
+        }
+      }
+    },
+    {
+      "name": "CrowdStrike vs Lateral Movement",
+      "description": "Teste de movimentação lateral com CrowdStrike Falcon instalado",
+      "payload": {
+        "test_id": "T-002-CROWDSTRIKE-LATERAL",
+        "test_name": "CrowdStrike vs Lateral Movement",
+        "cloud_provider": "hyperv",
+        "os_template": "windows-10-pro",
+        "vm_config": {
+          "vm_cpu": 4,
+          "vm_ram_mb": 8192,
+          "vm_switch_name": "Default Switch",
+          "base_vhdx_path": "D:\\CyberDuel\\VM-BASES\\Win10-Enterprise.vhdx",
+          "admin_user": "svc-adm-test",
+          "admin_password": "P@ssw0rd123!"
+        },
+        "edr_config": {
+          "vendor_name": "CrowdStrike Falcon",
+          "edr_token": "FALCON-TOKEN-ABC123",
+          "cid_value": "CID-12345678ABCD",
+          "installation_script_base64": "cG93ZXJzaGVsbC5leGUgLUNvbW1hbmQgIiRQcm9ncmVzc1ByZWZlcmVuY2UgPSAnU2lsZW50bHlDb250aW51ZSc7IEludm9rZS1XZWJSZXF1ZXN0IC1VcmkgJ2h0dHA6Ly9mYWxjb24tZG93bmxvYWRzLmNyb3dkc3RyaWtlLmNvbS9zZW5zb3JfaW5zdGFsbGVyLmV4ZScgLU91dEZpbGUgJ0M6XFRlbXBcc2Vuc29yLmV4ZSc7IFN0YXJ0LVByb2Nlc3MgLUZpbGVQYXRoICdDOlxUZW1wXHNlbnNvci5leGUnIC1Bcmd1bWVudExpc3QgJy9pbnN0YWxsIC9xdWlldCAvbm9yZXN0YXJ0IENJRD1DSUQtMTIzNDU2NzhBQkNEJyAtV2FpdCAtTm9OZXdXaW5kb3ci"
+        },
+        "attack_config": {
+          "ttp_id": "T1021.006",
+          "validation_check_command": "Get-Service WinRM | Select-Object Status, StartType"
+        }
+      }
+    },
+    {
+      "name": "SentinelOne vs Credential Dumping",
+      "description": "Teste de dump de credenciais LSASS com SentinelOne",
+      "payload": {
+        "test_id": "T-003-SENTINELONE-LSASS",
+        "test_name": "SentinelOne vs LSASS Memory Dump",
+        "cloud_provider": "hyperv",
+        "os_template": "windows-server-2022-base",
+        "vm_config": {
+          "vm_cpu": 4,
+          "vm_ram_mb": 8192,
+          "vm_switch_name": "Default Switch",
+          "base_vhdx_path": "D:\\CyberDuel\\VM-BASES\\Win2022-Server.vhdx",
+          "admin_user": "svc-sentinel",
+          "admin_password": "Secure@Pass2024"
+        },
+        "edr_config": {
+          "vendor_name": "SentinelOne",
+          "edr_token": "S1-TOKEN-XYZ789",
+          "installation_script_base64": "cG93ZXJzaGVsbC5leGUgLUNvbW1hbmQgIiRQcm9ncmVzc1ByZWZlcmVuY2UgPSAnU2lsZW50bHlDb250aW51ZSc7IEludm9rZS1XZWJSZXF1ZXN0IC1VcmkgJ2h0dHBzOi8vc2VudGluZWxvbmUtZG93bmxvYWRzLmNvbS9hZ2VudC9TZW50aW5lbEFnZW50X3dpbmRvd3MuZXhlJyAtT3V0RmlsZSAnQzpcVGVtcFxzMWFnZW50LmV4ZSc7IFN0YXJ0LVByb2Nlc3MgLUZpbGVQYXRoICdDOlxUZW1wXHMxYWdlbnQuZXhlJyAtQXJndW1lbnRMaXN0ICcvUVVJRVQgL1NJVEVfVE9LRU49UzEtVE9LRU4tWFlaNzg5JyAtV2FpdCAtTm9OZXdXaW5kb3ci"
+        },
+        "attack_config": {
+          "ttp_id": "T1003.001",
+          "validation_check_command": "Get-Process lsass | Select-Object Id, HandleCount, WorkingSet"
+        }
+      }
+    },
+    {
+      "name": "Microsoft Defender vs Ransomware",
+      "description": "Teste de simulação de ransomware com Microsoft Defender ATP",
+      "payload": {
+        "test_id": "T-004-DEFENDER-RANSOMWARE",
+        "test_name": "Microsoft Defender ATP vs Ransomware Simulation",
+        "cloud_provider": "hyperv",
+        "os_template": "windows-11-pro",
+        "vm_config": {
+          "vm_cpu": 6,
+          "vm_ram_mb": 12288,
+          "vm_switch_name": "Default Switch",
+          "base_vhdx_path": "D:\\CyberDuel\\VM-BASES\\Win11-Pro-Clean.vhdx",
+          "admin_user": "svc-defender",
+          "admin_password": "Def3nd3r@2024"
+        },
+        "edr_config": {
+          "vendor_name": "Microsoft Defender for Endpoint",
+          "edr_token": "MDE-TOKEN-DEF456",
+          "installation_script_base64": "cG93ZXJzaGVsbC5leGUgLUNvbW1hbmQgIlNldC1NcENvbXB1dGVyU3RhdHVzIC1Nb25pdG9yaW5nRW5hYmxlZCAkdHJ1ZTsgU2V0LU1wUHJlZmVyZW5jZSAtRGlzYWJsZVJlYWx0aW1lTW9uaXRvcmluZyAkZmFsc2U7IFVwZGF0ZS1NcFNpZ25hdHVyZSI="
+        },
+        "attack_config": {
+          "ttp_id": "T1486",
+          "validation_check_command": "Get-ChildItem -Path C:\\Temp -Filter '*.encrypted' -Recurse"
+        }
+      }
+    },
+    {
+      "name": "Carbon Black vs Process Injection",
+      "description": "Teste de injeção de processos com VMware Carbon Black",
+      "payload": {
+        "test_id": "T-005-CARBONBLACK-INJECTION",
+        "test_name": "Carbon Black vs Process Injection",
+        "cloud_provider": "hyperv",
+        "os_template": "windows-10-enterprise",
+        "vm_config": {
+          "vm_cpu": 4,
+          "vm_ram_mb": 8192,
+          "vm_switch_name": "Default Switch",
+          "base_vhdx_path": "D:\\CyberDuel\\VM-BASES\\Win10-Ent-EDR.vhdx",
+          "admin_user": "svc-carbonblack",
+          "admin_password": "CarbonBl@ck2024"
+        },
+        "edr_config": {
+          "vendor_name": "VMware Carbon Black",
+          "edr_token": "CB-TOKEN-789XYZ",
+          "cid_value": "CB-ORG-ID-12345",
+          "installation_script_base64": "cG93ZXJzaGVsbC5leGUgLUNvbW1hbmQgIiRQcm9ncmVzc1ByZWZlcmVuY2UgPSAnU2lsZW50bHlDb250aW51ZSc7IEludm9rZS1XZWJSZXF1ZXN0IC1VcmkgJ2h0dHBzOi8vY2Fib25ibGFjay1kb3dubG9hZHMudm13YXJlLmNvbS9zZW5zb3IuZXhlJyAtT3V0RmlsZSAnQzpcVGVtcFxjYnNlbnNvci5leGUnOyBTdGFydC1Qcm9jZXNzIC1GaWxlUGF0aCAnQzpcVGVtcFxjYnNlbnNvci5leGUnIC1Bcmd1bWVudExpc3QgJy9TIC9DT01QQU5ZX0NPREU9Q0ItT1JHLULEM'="
+        },
+        "attack_config": {
+          "ttp_id": "T1055",
+          "validation_check_command": "Get-Process | Where-Object {$_.Modules.ModuleName -like '*injected*'}"
+        }
+      }
+    },
+    {
+      "name": "Sequência Completa de Ataques",
+      "description": "Executa sequência padrão de 5 ataques sem TTP específico",
+      "payload": {
+        "test_id": "T-006-FULL-SEQUENCE",
+        "test_name": "Sequência Completa de Ataques MITRE",
+        "cloud_provider": "hyperv",
+        "os_template": "windows-server-2022-base",
+        "vm_config": {
+          "vm_cpu": 4,
+          "vm_ram_mb": 6144,
+          "vm_switch_name": "Default Switch",
+          "base_vhdx_path": "C:\\HyperV-Disks\\VM-BASE.vhdx",
+          "admin_user": "adm",
+          "admin_password": "adm123"
+        }
+      }
+    },
+    {
+      "name": "Teste Rápido - Sem EDR",
+      "description": "Teste rápido de conectividade e execução básica",
+      "payload": {
+        "test_id": "T-QUICK-001",
+        "test_name": "Quick Test - Basic Execution",
+        "cloud_provider": "hyperv",
+        "os_template": "windows-server-2022-base",
+        "vm_config": {
+          "vm_cpu": 2,
+          "vm_ram_mb": 2048,
+          "vm_switch_name": "Default Switch",
+          "base_vhdx_path": "C:\\HyperV-Disks\\VM-BASE.vhdx",
+          "admin_user": "adm",
+          "admin_password": "adm123"
+        },
+        "attack_config": {
+          "ttp_id": "T1059.003"
+        }
+      }
+    },
+    {
+      "name": "Palo Alto Cortex XDR vs Exfiltration",
+      "description": "Teste de exfiltração de dados com Palo Alto Cortex XDR",
+      "payload": {
+        "test_id": "T-007-CORTEX-EXFIL",
+        "test_name": "Cortex XDR vs Data Exfiltration",
+        "cloud_provider": "hyperv",
+        "os_template": "windows-10-pro",
+        "vm_config": {
+          "vm_cpu": 4,
+          "vm_ram_mb": 8192,
+          "vm_switch_name": "Default Switch",
+          "base_vhdx_path": "D:\\CyberDuel\\VM-BASES\\Win10-Clean.vhdx",
+          "admin_user": "svc-cortex",
+          "admin_password": "C0rt3x@XDR2024"
+        },
+        "edr_config": {
+          "vendor_name": "Palo Alto Cortex XDR",
+          "edr_token": "CORTEX-TOKEN-999AAA",
+          "installation_script_base64": "cG93ZXJzaGVsbC5leGUgLUNvbW1hbmQgIiRQcm9ncmVzc1ByZWZlcmVuY2UgPSAnU2lsZW50bHlDb250aW51ZSc7IEludm9rZS1XZWJSZXF1ZXN0IC1VcmkgJ2h0dHBzOi8vY29ydGV4LWRvd25sb2Fkcy5wYWxvYWx0b25ldHdvcmtzLmNvbS9hZ2VudC9pbnN0YWxsZXIuZXhlJyAtT3V0RmlsZSAnQzpcVGVtcFxjb3J0ZXguZXhlJzsgU3RhcnQtUHJvY2VzcyAtRmlsZVBhdGggJ0M6XFRlbXBcY29ydGV4LmV4ZScgLUFyZ3VtZW50TGlzdCAnL3F1aWV0IC9ub3Jlc3RhcnQgVE9LRU49Q09SVEVYLVRPS0VOLTk5OUFBQScgLVdhaXQgLU5vTmV3V2luZG93Ig=="
+        },
+        "attack_config": {
+          "ttp_id": "T1041",
+          "validation_check_command": "Get-NetTCPConnection | Where-Object {$_.State -eq 'Established' -and $_.RemotePort -eq 443}"
+        }
+      }
+    }
+  ],
+  "notes": {
+    "installation_script_base64": "O script de instalação deve ser encodado em Base64. Exemplo de como encodar:",
+    "encoding_example": "powershell.exe -Command \"[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes('seu-script-aqui'))\"",
+    "decoding_example": "O sistema decodifica automaticamente usando: base64.b64decode(script).decode('utf-8')"
+  },
+  "cloud_providers_supported": [
+    "hyperv",
+    "azure",
+    "aws",
+    "gcp"
+  ],
+  "os_templates_available": [
+    "windows-server-2022-base",
+    "windows-server-2019-base",
+    "windows-11-pro",
+    "windows-10-pro",
+    "windows-10-enterprise"
+  ]
+}

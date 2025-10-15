@@ -1,0 +1,224 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # API CyberDuel
+  # ============================================
+  cyberduel-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: cyberduel-api
+    image: cyberduel-api:latest
+    restart: unless-stopped
+    
+    ports:
+      - "5000:5000"
+    
+    environment:
+      # Flask
+      - FLASK_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - DEBUG=False
+      
+      # API
+      - HOST=0.0.0.0
+      - PORT=5000
+      
+      # CORS
+      - CORS_ENABLED=True
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+      
+      # Rate Limiting (usando Redis)
+      - RATELIMIT_ENABLED=True
+      - RATELIMIT_DEFAULT=100 per hour
+      - RATELIMIT_STORAGE_URL=redis://redis:6379
+      
+      # Terraform
+      - TERRAFORM_BASE_DIR=/app/iac
+      - TERRAFORM_TIMEOUT_DESTROY=300
+      - TERRAFORM_TIMEOUT_APPLY=600
+      
+      # WinRM
+      - WINRM_PORT=5985
+      - WINRM_TRANSPORT=ntlm
+      - WINRM_MAX_RETRIES=3
+      
+      # Logging
+      - LOG_LEVEL=INFO
+      - LOG_FILE=/app/logs/cyberduel.log
+    
+    volumes:
+      # Persistir logs
+      - ./logs:/app/logs
+      # Persistir resultados
+      - ./results:/app/results
+      # Persistir temp
+      - ./temp:/app/temp
+      # Montar configuração do Terraform (opcional)
+      - ./iac:/app/iac:ro
+    
+    networks:
+      - cyberduel-network
+    
+    depends_on:
+      - redis
+    
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/api/v1/health').raise_for_status()"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    # Limites de recursos
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '1'
+          memory: 1G
+  
+  # ============================================
+  # Redis (para Rate Limiting e Cache)
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: cyberduel-redis
+    restart: unless-stopped
+    
+    ports:
+      - "6379:6379"
+    
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    
+    volumes:
+      - redis-data:/data
+    
+    networks:
+      - cyberduel-network
+    
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+  
+  # ============================================
+  # Prometheus (Opcional - Monitoring)
+  # ============================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: cyberduel-prometheus
+    restart: unless-stopped
+    
+    ports:
+      - "9090:9090"
+    
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    
+    networks:
+      - cyberduel-network
+    
+    profiles:
+      - monitoring
+  
+  # ============================================
+  # Grafana (Opcional - Visualização)
+  # ============================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: cyberduel-grafana
+    restart: unless-stopped
+    
+    ports:
+      - "3000:3000"
+    
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+    
+    networks:
+      - cyberduel-network
+    
+    depends_on:
+      - prometheus
+    
+    profiles:
+      - monitoring
+
+  # ============================================
+  # PostgreSQL (Opcional - Persistência)
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: cyberduel-postgres
+    restart: unless-stopped
+    
+    ports:
+      - "5432:5432"
+    
+    environment:
+      - POSTGRES_DB=cyberduel
+      - POSTGRES_USER=${POSTGRES_USER:-cyberduel}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-cyberduel}
+    
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    
+    networks:
+      - cyberduel-network
+    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cyberduel"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    
+    profiles:
+      - database
+
+# ============================================
+# Networks
+# ============================================
+networks:
+  cyberduel-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+# ============================================
+# Volumes
+# ============================================
+volumes:
+  redis-data:
+    driver: local
+  prometheus-data:
+    driver: local
+  grafana-data:
+    driver: local
+  postgres-data:
+    driver: local

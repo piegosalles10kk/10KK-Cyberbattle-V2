@@ -1,0 +1,60 @@
+# ============================================
+# CyberDuel API - DEPENDÊNCIAS MÍNIMAS
+# ============================================
+# Use este arquivo se estiver tendo problemas com requirements.txt
+
+# Flask (Core da API)
+flask==3.0.3
+Werkzeug==3.0.3
+
+# CORS
+flask-cors==5.0.0
+
+# WinRM (Execução Remota)
+pywinrm==0.5.0
+xmltodict==0.13.0
+
+# HTTP Requests
+requests==2.32.3
+certifi==2024.7.4
+charset-normalizer==3.3.2
+idna==3.7
+urllib3==2.2.2
+
+# Variáveis de Ambiente
+python-dotenv==1.0.1
+
+# Logging JSON
+python-json-logger==2.0.7
+
+# Validação de Dados
+jsonschema==4.23.0
+attrs==23.2.0
+jsonschema-specifications==2023.12.1
+referencing==0.35.1
+rpds-py==0.18.1
+
+# Rate Limiting
+flask-limiter==3.8.0
+limits==3.13.0
+deprecated==1.2.14
+wrapt==1.16.0
+typing-extensions==4.12.2
+
+# Dependências do WinRM
+ntlm-auth==1.5.0
+cryptography==42.0.8
+cffi==1.16.0
+pycparser==2.22
+six==1.16.0
+
+# Dependências do Flask
+blinker==1.8.2
+click==8.1.7
+colorama==0.4.6
+itsdangerous==2.2.0
+Jinja2==3.1.4
+MarkupSafe==2.1.5
+
+# Outras dependências comuns
+pytz==2024.1

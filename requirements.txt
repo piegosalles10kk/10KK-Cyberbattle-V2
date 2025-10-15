@@ -1,0 +1,75 @@
+# ============================================
+# CORE DEPENDENCIES (Obrigatórias)
+# ============================================
+
+# Flask e extensões
+flask>=2.3.0,<4.0.0
+flask-cors>=4.0.0
+
+# WinRM para execução remota
+pywinrm>=0.4.3
+
+# Requests para chamadas HTTP
+requests>=2.31.0
+
+# Python-dotenv para variáveis de ambiente
+python-dotenv>=1.0.0
+
+# Logging estruturado
+python-json-logger>=2.0.7
+
+# Validação de dados
+jsonschema>=4.19.0
+
+# Rate limiting
+flask-limiter>=3.5.0
+
+# Dependências do Flask-Limiter
+limits>=3.0.0
+deprecated>=1.2.0
+
+# ============================================
+# MITRE ATT&CK (Opcional)
+# ============================================
+# Descomente se quiser usar bibliotecas MITRE oficiais
+# mitreattack-python>=3.0.0
+# pyattck>=7.0.0
+
+# ============================================
+# AUTENTICAÇÃO (Opcional)
+# ============================================
+# Descomente se quiser adicionar autenticação JWT
+# pyjwt>=2.8.0
+
+# ============================================
+# DATABASE (Opcional)
+# ============================================
+# Descomente se quiser persistência em banco de dados
+# sqlalchemy>=2.0.0
+# psycopg2-binary>=2.9.0  # PostgreSQL
+# pymongo>=4.5.0  # MongoDB
+
+# ============================================
+# MONITORING (Opcional)
+# ============================================
+# prometheus-client>=0.18.0
+
+# ============================================
+# DEVELOPMENT & TESTING (Opcional)
+# ============================================
+# Descomente para desenvolvimento
+
+# Testing
+# pytest>=7.4.0
+# pytest-flask>=1.2.0
+# pytest-cov>=4.1.0
+# requests-mock>=1.11.0
+
+# Code quality
+# black>=23.9.0
+# flake8>=5.0.4  # Versão compatível com pip mais antigo
+# pylint>=2.17.0
+
+# Documentation
+# sphinx>=7.2.0
+# sphinx-rtd-theme>=1.3.0
