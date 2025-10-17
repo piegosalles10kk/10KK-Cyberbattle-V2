@@ -10,7 +10,7 @@
         "os_template": "windows-server-2022-base",
         "vm_config": {
           "vm_cpu": 2,
-          "vm_ram_mb": 4096,
+          "vm_ram_mb": 3096,
           "vm_switch_name": "Default Switch",
           "base_vhdx_path": "C:\\HyperV-Disks\\VM-BASE.vhdx",
           "admin_user": "adm",
